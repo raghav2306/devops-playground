@@ -1,0 +1,28 @@
+name: Go service CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["samples/go-service-k8s/**", ".github/workflows/go-ci.yml"]
+  pull_request:
+    paths: ["samples/go-service-k8s/**", ".github/workflows/go-ci.yml"]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: samples/go-service-k8s
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: samples/go-service-k8s/go.mod
+      - name: Vet
+        run: go vet ./...
+      - name: Test with coverage
+        run: go test ./... -v -coverprofile=coverage.out
+      - name: Coverage summary
+        run: go tool cover -func=coverage.out
+      - name: Build Docker image
+        run: docker build -t go-app:ci .

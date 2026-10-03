@@ -1,0 +1,22 @@
+✅ Goal:
+
+Use Docker containers as Jenkins agents (slaves) with the Docker Pipeline plugin.
+
+🧩 Step 1: Install Required Jenkins Plugins
+
+Go to Manage Jenkins → Plugins and install:
+
+✅ Docker Pipeline
+✅ Docker Commons Plugin
+✅ Docker plugin
+✅ Pipeline
+(Optional) NodeJS plugin, Git plugin, etc.
+
+🐳 Step 2: Ensure Docker is Working on Jenkins Server
+
+sudo apt install docker.io -y
+
+Verify Docker from Jenkins user:
+sudo usermod -aG docker jenkins
+sudo usermod -aG docker ubuntu
+sudo reboot

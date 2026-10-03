@@ -1,0 +1,52 @@
+name: Deploy Node sample to EC2
+
+# Manual trigger: needs the secrets EC2_HOST, EC2_USER and EC2_SSH_KEY
+# (Settings > Secrets and variables > Actions). Kept manual so the repo
+# stays green without an EC2 instance.
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: samples/node-ts-express-ec2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Package release
+        run: npm ci --omit=dev && tar -czf release.tar.gz build node_modules package.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: samples/node-ts-express-ec2/release.tar.gz
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release
+          path: ./artifact
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      - name: Copy release and restart with PM2
+        run: |
+          scp ./artifact/release.tar.gz ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/release.tar.gz
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            mkdir -p ~/deploy/releases
+            tar -xzf /tmp/release.tar.gz -C ~/deploy/releases
+            pm2 restart ~/deploy/releases/build/src/index.js
+            rm /tmp/release.tar.gz
+          EOF

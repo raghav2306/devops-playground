@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "es2022",
+    "outDir": "./build",
+    "rootDir": ".",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "types": ["jest"]
+  },
+  "include": ["src/**/*", "src/notify.json", "types/**/*"],
+  "exclude": ["node_modules"]
+}

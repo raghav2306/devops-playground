@@ -1,0 +1,23 @@
+✅ Step-by-Step: Connect Jenkins with SonarQube
+
+🔧 1. Install SonarQube Scanner Plugin in Jenkins
+Go to Jenkins Dashboard → Manage Jenkins → Plugins.
+Under the Available tab, search for "SonarQube Scanner".
+Install it and restart Jenkins if prompted.
+
+🔐 2. Generate a SonarQube Authentication Token
+Open SonarQube in your browser (http://<your-sonar-host>:9000).
+Login as admin (default user: admin / admin).
+Go to My Account → Security.
+Generate a new token (e.g., jenkins-token) and copy it.
+You will not see it again — save it securely.
+
+🧩 Step 3: Configure SonarQube Credentials in Jenkins
+Navigate to Jenkins Dashboard → Manage Jenkins → Credentials.
+Under System, click on Global credentials (unrestricted).
+Click on “Add Credentials” (left sidebar).
+In the Kind dropdown, select “Secret text”.
+Paste the authentication token you copied from your SonarQube server into the Secret field.
+Set the ID to sonarqube (this ID will be used in your pipeline).
+Optionally, add a description for clarity (e.g., "SonarQube Auth Token").
+Click Save.

@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/raghav2306/devops-playground.git'
+        BRANCH = 'main'
+        SUBDIR = 'ci-cd/jenkins-sonarqube-docker'
+        SONAR_URL = "http://<SONARQUBE_HOST>:9000" // replace with your SonarQube server
+        DOCKER_IMAGE = "raghav2306/node-jenkins-app"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '🔄 Checking out code from GitHub...'
+                git credentialsId: 'github-creds', branch: "${BRANCH}", url: "${GIT_REPO}"
+                echo '✅ Code checkout completed.'
+            }
+        }
+
+        stage('Install Dependencies & Test') {
+            agent {
+                docker { image 'node:22-slim'; args '-u root' }
+            }
+            steps {
+                dir("${SUBDIR}") {
+                    sh '''
+                    echo "📦 Installing dependencies..."
+                    npm ci
+
+                    echo "🧪 Running tests..."
+                    npm run test
+                    '''
+                }
+            }
+        }
+
+        stage('Static Code Analysis') {
+            agent {
+                docker { image 'sonarsource/sonar-scanner-cli:5'; args '-u root' }
+            }
+            steps {
+                echo '🔍 Starting static code analysis with SonarQube...'
+                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+                    dir("${SUBDIR}") {
+                        sh '''sonar-scanner -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_AUTH_TOKEN}'''
+                    }
+                }
+                echo '✅ Static code analysis completed.'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo '🐳 Building Docker image using multi-stage build...'
+                script {
+                    dir("${SUBDIR}") {
+                        dockerImage = docker.build("${DOCKER_IMAGE}:${BUILD_NUMBER}")
+                    }
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo '🚀 Pushing Docker image to Docker Hub...'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh "docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,79 @@
+✅ How to Create Multiple Profiles
+
+aws configure --profile devops-aws
+aws configure --profile prod-aws
+aws configure --profile testing-aws
+
+Each time, it will ask for:
+
+Access Key ID
+Secret Access Key
+Default region
+Output format
+
+📁 Where Are Profiles Stored?
+Profiles are stored in two files in your home directory:
+
+cat ~/.aws/credentials
+cat ~/.aws/config
+
+🧹 BONUS: Delete a Profile
+
+Just edit the ~/.aws/credentials and ~/.aws/config files manually and remove the sections you don't want.
+
+
+🚀 How to Use a Specific Profile
+
+You can either:
+1. Use the --profile flag:
+    aws s3 ls --profile prod-aws
+2. Export it temporarily in your shell:
+    export AWS_PROFILE=prod-aws
+    aws s3 ls  # Now uses prod-aws
+
+🚀 How to set a default profile for your terminal session:
+
+Temporary for current terminal session
+export AWS_PROFILE=prod-account
+
+Now, any aws command will use prod-account by default:
+    aws s3 ls     # Uses prod-account profile automatically
+    aws ec2 describe-instances
+
+To switch profiles in the same session
+Just change the environment variable:
+
+export AWS_PROFILE=dev-account
+echo $AWS_PROFILE
+aws s3 ls     # Now uses dev-account
+
+🚀  Create aliases for quick switching:
+alias awsprod="export AWS_PROFILE=prod-account"
+alias awsstaging="export AWS_PROFILE=staging-account"
+alias awsdev="export AWS_PROFILE=dev-account"
+
+Run awsprod to switch to prod profile quickly.
+
+🚀  Where to store aliases?
+
+For bash (most Linux distros, macOS default shell before macOS Catalina):
+File: ~/.bashrc
+Or sometimes ~/.bash_profile (macOS)
+Recommended: put aliases in ~/.bashrc
+
+echo $SHELL
+
+Example:
+# ~/.bashrc
+
+alias awsprod="export AWS_PROFILE=prod-account"
+alias awsstaging="export AWS_PROFILE=staging-account"
+alias awsdev="export AWS_PROFILE=dev-account"
+
+After adding this, reload with:
+source ~/.bashrc
+
+For zsh (default shell on macOS Catalina and newer):
+File: ~/.zshrc
+
+echo $SHELL

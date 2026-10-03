@@ -1,0 +1,38 @@
+✅ Step-by-Step Jenkins Setup on EC2 (Ubuntu-based)
+
+⚙️ 1. Launch EC2 Instance
+OS: Ubuntu 22.04 LTS (or similar)
+Instance type: t2.micro or larger
+Security group:
+Allow SSH (22) for login
+Allow HTTP (80) and Custom TCP 8080 for Jenkins UI
+
+🔐 2. SSH into the EC2 Instance
+ssh -i your-key.pem ubuntu@<EC2-PUBLIC-IP>
+
+📦 3. Install Java (Jenkins Dependency)
+Jenkins requires Java (JDK 11+ recommended)
+
+📥 4. Add Jenkins Repo & Install Jenkins
+
+▶️ 5. Start and Enable Jenkins
+
+🔓 6. Allow Port 8080 in EC2 Security Group
+Go to AWS Console → EC2 → Security Groups → Edit Inbound Rules
+Add rule:
+Type: Custom TCP
+Port: 8080
+Source: 0.0.0.0/0 (or restrict to your IP)
+
+🌐 7. Access Jenkins Web Interface
+Visit:
+http://<EC2-PUBLIC-IP>:8080
+
+🔑 8. Unlock Jenkins
+Find the admin password:
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+✅ 9. Install Plugins & Create Admin User
+Select “Install suggested plugins”
+Create your admin user
+Start using Jenkins!

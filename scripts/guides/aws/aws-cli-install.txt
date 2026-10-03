@@ -1,0 +1,40 @@
+🚀 Step 1: Install AWS CLI
+
+For Linux/macOS
+
+Run:
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+
+🔐 Step 2: Create IAM User (if not already)
+
+Go to the AWS Console:
+
+1. Navigate to IAM → Users → Add User
+2. Name: your-name-cli or terraform-user
+3. Access type: ✅ Programmatic access
+4. Permissions: Attach AdministratorAccess for now (or scoped permissions if you prefer).
+5. Save the Access Key ID and Secret Access Key securely.
+
+⚙️ Step 3: Configure AWS CLI
+
+Run : 
+aws configure --profile devops-aws
+This command sets up credentials and config for a named profile (devops-aws)
+
+You'll be prompted to enter:
+1. AWS Access Key ID
+2. AWS Secret Access Key
+3. Default region name (e.g., us-east-1, ap-south-1)
+4. Default output format (json, table, or text)
+➡️ This creates/updates entries in:
+   ~/.aws/credentials
+   ~/.aws/config
+
+Test : 
+aws sts get-caller-identity --profile devops-aws
+Uses the devops-aws profile to make a request to AWS STS (Security Token Service).
+✅ You should see an Account, Arn, and UserId.
+

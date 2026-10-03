@@ -1,0 +1,54 @@
+🔄 Step-by-Step: Set up a GitHub Webhook to Trigger Jenkins
+
+✅ 1. Ensure Jenkins is Publicly Accessible
+GitHub must be able to reach your Jenkins server.
+
+If you are running Jenkins locally or inside a private network, expose it using:
+Public IP / Domain
+Or tools like ngrok (for dev/testing)
+Or deploy Jenkins on a public cloud VM (AWS, etc.)
+🔐 If using a public endpoint, ensure it's secured with a username/password or token.
+
+✅ 2. Install the GitHub Plugin on Jenkins
+Go to Manage Jenkins → Plugin Manager
+Install "GitHub Integration Plugin" and "GitHub" plugin
+
+✅ 3. Set up GitHub Credentials in Jenkins (if private repo)
+Go to Manage Jenkins → Credentials → Global
+Add a Username + PAT (or SSH if you’re using that)
+
+✅ 4. Update Jenkins Job Settings
+In your Jenkins Pipeline Job:
+
+Click Configure
+Under Build Triggers → ✅ Check:
+GitHub hook trigger for GITScm polling
+
+✅ 5. Set SCM Config to Poll Git
+Under Pipeline → Pipeline script from SCM or Git section in freestyle project:
+
+Add your repo URL
+Set main as the branch
+Provide credentials if needed
+
+✅ 6. Create Webhook in GitHub
+Go to your GitHub repo → Settings → Webhooks
+Click "Add webhook"
+Fill in:
+Payload URL:
+http://<jenkins-domain>/github-webhook/
+E.g. http://<JENKINS_HOST>:8080/github-webhook/
+
+Content type: application/json
+Secret: Optional, for added security (Jenkins must be configured to verify it)
+Which events: Select
+✅ Just the push event
+Click Add Webhook
+
+✅ 7. Test the Webhook
+Make a small commit and push to main
+Watch Jenkins auto-trigger the pipeline
+
+✅ 8. Verify Logs
+Check GitHub → Webhooks → "Recent Deliveries" for 200 OK
+Check Jenkins console logs to confirm build is triggered

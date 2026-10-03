@@ -1,0 +1,51 @@
+🔐 Authentication & Registry
+
+Login to Docker Hub : 	docker login
+Logout from Docker Hub : 	docker logout
+
+🔧 Image Management
+
+Build image from Dockerfile : 	docker build -t <image-name>:<tag> .
+List local images : 	docker images
+Remove an image : 	docker rmi <image-name>:<tag>
+Tag an image :	docker tag <source> <username>/<repo>:<tag>
+Push image to Docker Hub :	docker push <username>/<repo>:<tag>
+Pull image from Docker Hub :	docker pull <username>/<repo>:<tag>
+Search Docker Hub :	docker search <term>
+Inspect image details :	docker inspect <image-name>
+Save image to tar :	docker save -o image.tar <image-name>
+Load image from tar :	docker load -i image.tar
+
+🚀 Container Management
+
+Run a container : 	docker run <image>
+Run with interactive terminal : 	docker run -it <image> /bin/bash
+Run with detached interactive terminal : 	docker run -dit <image> /bin/bash
+Run with port mapping : 	docker run -p 8080:80 <image>
+Run with volume : 	docker run -v /host:/container <image>
+Assign container name : 	docker run --name myapp <image>
+List running containers :	docker ps
+List all containers :	docker ps -a
+Stop container :	docker stop <container-id>
+Start container :	docker start <container-id>
+Restart container :	docker restart <container-id>
+Remove container :	docker rm <container-id>
+Remove all containers :	docker rm $(docker ps -aq)
+View container logs :	docker logs <container-id>
+Execute inside container :	docker exec -it <container-id> /bin/bash
+
+📦 Docker Volumes & Networks
+
+List volumes :	 docker volume ls
+Create volume : 	docker volume create <name>
+Remove volume : 	docker volume rm <name>
+List networks : 	docker network ls
+Create network : 	docker network create <name>
+Remove network : 	docker network rm <name>
+
+🧰 Docker System & Cleanup
+
+Show system disk usage : 	docker system df
+Remove unused data : 	docker system prune
+Remove all images : 	docker rmi $(docker images -q)
+Remove dangling images : 	docker image prune

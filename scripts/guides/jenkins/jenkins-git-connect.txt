@@ -1,0 +1,76 @@
+🔄 Step-by-Step: Jenkins Connection with Private GitHub Repository
+
+✅ Option 1: HTTPS (Personal Access Token)
+Step 1: Create GitHub PAT (Personal Access Token)
+
+Go to GitHub → Settings → Developer Settings → Personal Access Tokens
+Click “Generate new token (classic)”
+Add scopes:
+repo (for private repo access)
+read:org (if needed)
+workflow (if working with GitHub Actions too)
+Copy the token (once generated)
+
+Step 2: Add Credentials in Jenkins
+
+Go to Jenkins → Manage Jenkins → Credentials
+Under (global) → Add Credentials
+Choose:
+Kind: Username with password
+Username: Your GitHub username
+Password: The PAT from Step 1
+ID: (e.g., github-creds)
+Click Save
+
+
+Step 3: Update Jenkinsfile for HTTPS
+Modify the git step in your pipeline:
+
+stage('Checkout') {
+    steps {
+        echo '🔄 Checking out code from GitHub (HTTPS)...'
+        git credentialsId: 'github-creds', branch: "${BRANCH}", url: "${GIT_REPO}"
+        echo '✅ Code checkout completed.'
+    }
+}
+
+🔐 Option 2: SSH Authentication (More Secure for CI/CD)
+
+Step 1: Generate SSH Key (if you don’t have one already)
+
+On your Jenkins server (Linux/macOS):
+ssh-keygen -t ed25519 -C "jenkins@ci" -f ~/.ssh/id_jenkins_github
+
+This creates:
+id_jenkins_github (private key)
+id_jenkins_github.pub (public key)
+
+Step 2: Add Public Key to GitHub
+
+Go to GitHub → Settings → SSH and GPG keys
+Click New SSH Key
+Paste the contents of id_jenkins_github.pub
+Name it something like “Jenkins CI”
+Click Add SSH Key
+
+
+Step 3: Add Private Key in Jenkins
+
+Go to Jenkins → Manage Jenkins → Credentials
+Under (global) → Add Credentials
+Choose:
+Kind: SSH Username with private key
+Username: git
+Private Key: Enter manually → Paste content of id_jenkins_github
+ID: e.g., github-ssh
+Click Save
+
+Step 4: Update Jenkinsfile for SSH
+stage('Checkout') {
+    steps {
+        echo '🔄 Checking out code from GitHub (SSH)...'
+        git credentialsId: 'github-ssh', branch: "${BRANCH}", url: 'git@github.com:<username>/<repo>.git'
+        echo '✅ Code checkout completed.'
+    }
+}
+

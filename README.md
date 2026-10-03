@@ -2,6 +2,8 @@
 
 [![Go CI](https://github.com/raghav2306/devops-playground/actions/workflows/go-ci.yml/badge.svg)](https://github.com/raghav2306/devops-playground/actions/workflows/go-ci.yml)
 [![Node CI](https://github.com/raghav2306/devops-playground/actions/workflows/node-ci.yml/badge.svg)](https://github.com/raghav2306/devops-playground/actions/workflows/node-ci.yml)
+[![Spring CI](https://github.com/raghav2306/devops-playground/actions/workflows/spring-ci.yml/badge.svg)](https://github.com/raghav2306/devops-playground/actions/workflows/spring-ci.yml)
+[![Terraform](https://github.com/raghav2306/devops-playground/actions/workflows/terraform-ci.yml/badge.svg)](https://github.com/raghav2306/devops-playground/actions/workflows/terraform-ci.yml)
 [![Django CI](https://github.com/raghav2306/devops-playground/actions/workflows/django-ci.yml/badge.svg)](https://github.com/raghav2306/devops-playground/actions/workflows/django-ci.yml)
 
 Hands-on labs for the delivery side of backend work: containerizing apps, building CI/CD pipelines, and setting up servers. Each folder is a small, runnable example with its own README.
@@ -16,6 +18,8 @@ Hands-on labs for the delivery side of backend work: containerizing apps, buildi
 | [`samples/node-ts-express-ec2/`](samples/node-ts-express-ec2) | TypeScript Express app with tests, plus a manual GitHub Actions deploy to EC2 with PM2 | Node.js, TypeScript, Jest, GitHub Actions, AWS EC2 |
 | [`samples/django-app/`](samples/django-app) | Small Django app with model, views and tests | Python, Django |
 | [`samples/node-jwt-auth-api/`](samples/node-jwt-auth-api) | Auth API with JWT access/refresh tokens and role-based access | Node.js, TypeScript, Express, MongoDB |
+| [`terraform/`](terraform) | AWS infrastructure as code: EC2, reusable modules (EC2, S3, DynamoDB) and an S3 remote backend with state locking | Terraform, AWS |
+| [`samples/spring-boot-maven/`](samples/spring-boot-maven) | Spring Boot REST API (books) with JPA, H2 and tests, built by GitHub Actions | Java 17, Spring Boot, Maven |
 | [`scripts/`](scripts) | Bash install scripts and step-by-step setup guides for Docker, Jenkins, SonarQube, Nginx, PM2, AWS CLI | Bash, Ubuntu |
 | [`cheatsheets/`](cheatsheets) | Linux command notes | awk, ssh, disk resize, and more |
 
@@ -28,6 +32,8 @@ Workflows live in [`.github/workflows`](.github/workflows) and only run for the 
 | `go-ci.yml` | push / PR touching the Go sample | vet, test with coverage, Docker build |
 | `node-ci.yml` | push / PR touching either Node project | install, test, build (matrix of two projects) |
 | `django-ci.yml` | push / PR touching the Django sample | install, test |
+| `spring-ci.yml` | push / PR touching the Spring Boot sample | JDK 17 build, tests, jar uploaded as artifact |
+| `terraform-ci.yml` | push / PR touching `terraform/` | `init -backend=false` and `validate` for each folder |
 | `deploy-node-ec2.yml` | manual | build, upload artifact, SCP to EC2, restart with PM2 |
 
 The deploy workflow is manual because it needs an EC2 host and secrets (`EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`).

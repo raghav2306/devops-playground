@@ -1,0 +1,19 @@
+# Local Terraform state
+*.tfstate
+*.tfstate.backup
+
+# Lock file
+.terraform.lock.hcl
+
+# Terraform working directory
+.terraform/
+
+# Crash logs
+crash.log
+
+# Variable definitions (if they contain secrets)
+*.tfvars
+*.tfvars.json
+
+# Plan output (optional)
+terraform.tfplan

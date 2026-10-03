@@ -1,0 +1,28 @@
+name: Spring Boot CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["samples/spring-boot-maven/**", ".github/workflows/spring-ci.yml"]
+  pull_request:
+    paths: ["samples/spring-boot-maven/**", ".github/workflows/spring-ci.yml"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: samples/spring-boot-maven
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+      - name: Build and test
+        run: mvn -B clean verify
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spring-boot-jar
+          path: samples/spring-boot-maven/target/*.jar
